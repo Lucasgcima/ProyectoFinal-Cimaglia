@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Busca tu reserva</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <img src="img/Logo-en-blancoBariloche-768x200.png" alt="Banner del hotel" class="banner" />
+  </header>
+
+  <main>
+    <div class="reserva-container">
+      <h1>Busca tu reserva</h1>
+      <input type="text" id="ciudad" placeholder="Ingrese la ciudad de destino" />
+      <input type="text" id="fecha" placeholder="Ingrese la fecha (dd/mm/aaaa)" />
+      <input type="text" id="documento" placeholder="Ingrese número de documento" />
+      <button onclick="buscarReserva()">Buscar</button>
+      <p id="resultado"></p>
+    </div>
+
+    <div class="agregar-container">
+      <h2>Agregar nueva reserva</h2>
+      <input type="text" id="nuevaCiudad" placeholder="Ciudad" />
+      <input type="text" id="nuevaFecha" placeholder="Fecha (dd/mm/aaaa)" />
+      <input type="text" id="nuevoDocumento" placeholder="Número de documento" />
+      <button onclick="agregarReserva()">Agregar reserva</button>
+      <p id="mensaje-agregado"></p>
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
