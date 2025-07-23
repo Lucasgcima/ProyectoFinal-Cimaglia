@@ -1,23 +1,63 @@
-// Constructor
+// Lista de ciudades válidas
+const ciudadesValidas = [
+  "san carlos de bariloche",
+  "buenos aires",
+  "salta",
+  "iguazú",
+  "mendoza",
+  "el calafate",
+  "ushuaia",
+  "cordoba"
+];
+
+// Constructor de reservas
 function Reserva(ciudad, fecha, documento) {
   this.ciudad = ciudad.toLowerCase();
   this.fecha = fecha;
   this.documento = documento.replace(/\./g, "");
 }
 
-// Cargar reservas desde localStorage (si existen)
+// Recuperar reservas guardadas en localStorage
 let reservas = JSON.parse(localStorage.getItem("reservas")) || [];
 
-// Agregar reserva
+// Función para agregar una reserva nueva
 function agregarReserva() {
   const ciudad = document.getElementById("nuevaCiudad").value.trim().toLowerCase();
   const fecha = document.getElementById("nuevaFecha").value.trim();
   const documento = document.getElementById("nuevoDocumento").value.trim().replace(/\./g, "");
-
   const mensaje = document.getElementById("mensaje-agregado");
 
   if (!ciudad || !fecha || !documento) {
     mensaje.textContent = "Por favor complete todos los campos.";
+    mensaje.style.color = "red";
+    return;
+  }
+
+  // Validar ciudad
+  if (!ciudadesValidas.includes(ciudad)) {
+    mensaje.textContent = "La ciudad ingresada no es válida o no tenemos hoteles allí.";
+    mensaje.style.color = "red";
+    return;
+  }
+
+  // Validar fecha dentro de rango permitido
+  const hoy = new Date();
+  hoy.setHours(0,0,0,0);
+
+  const fechaReserva = new Date(fecha.split("/").reverse().join("/"));
+  fechaReserva.setHours(0,0,0,0);
+
+  const unAnioDespues = new Date(hoy);
+  unAnioDespues.setFullYear(hoy.getFullYear() + 1);
+
+  if (fechaReserva < hoy) {
+    mensaje.textContent = "La fecha de reserva no puede ser anterior a hoy.";
+    mensaje.style.color = "red";
+    return;
+  }
+
+  if (fechaReserva > unAnioDespues) {
+    mensaje.textContent = "La fecha de reserva no puede ser más de 1 año desde hoy.";
     mensaje.style.color = "red";
     return;
   }
@@ -31,7 +71,6 @@ function agregarReserva() {
 
   const nuevaReserva = new Reserva(ciudad, fecha, documento);
   reservas.push(nuevaReserva);
-
   localStorage.setItem("reservas", JSON.stringify(reservas));
 
   mensaje.textContent = "Reserva agregada correctamente.";
@@ -42,7 +81,7 @@ function agregarReserva() {
   document.getElementById("nuevoDocumento").value = "";
 }
 
-// Buscar reserva
+// Función para buscar una reserva existente
 function buscarReserva() {
   const ciudadInput = document.getElementById("ciudad").value.trim().toLowerCase();
   const fechaInput = document.getElementById("fecha").value.trim();
@@ -56,7 +95,12 @@ function buscarReserva() {
     return;
   }
 
-  // Método de orden superior: find
+  if (!ciudadesValidas.includes(ciudadInput)) {
+    resultado.textContent = "La ciudad ingresada no es válida o no tenemos hoteles allí.";
+    resultado.style.color = "red";
+    return;
+  }
+
   const reservaEncontrada = reservas.find(r =>
     r.ciudad === ciudadInput &&
     r.fecha === fechaInput &&
