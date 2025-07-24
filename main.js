@@ -1,3 +1,15 @@
+// Lista de ciudades válidas
+const ciudadesValidas = [
+  "san carlos de bariloche",
+  "buenos aires",
+  "salta",
+  "iguazú",
+  "mendoza",
+  "el calafate",
+  "ushuaia",
+  "cordoba"
+];
+
 // Constructor de reservas
 function Reserva(ciudad, fecha, documento) {
   this.ciudad = ciudad.toLowerCase();
@@ -21,45 +33,19 @@ function agregarReserva() {
     return;
   }
 
-  // Validar ciudad usando API GeoDB Cities
-  const url = `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${ciudad}&limit=1`;
+  // Validar ciudad
+  if (!ciudadesValidas.includes(ciudad)) {
+    mensaje.textContent = "La ciudad ingresada no es válida o no tenemos hoteles allí.";
+    mensaje.style.color = "red";
+    return;
+  }
 
-  const options = {
-    method: 'GET',
-    headers: {
-      'X-RapidAPI-Key': '7715d8ed9fmsh05e7c03017ec0d4p13b0c4jsn3ef4d71ba371',
-      'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-    }
-  };
-
-  fetch(url, options)
-    .then(response => response.json())
-    .then(data => {
-      if (data.data.length === 0) {
-        mensaje.textContent = "La ciudad ingresada no fue encontrada en la base de datos global.";
-        mensaje.style.color = "red";
-        return;
-      }
-
-      // Si pasa la validación, continuar con la reserva
-      continuarCreandoReserva(ciudad, fecha, documento);
-    })
-    .catch(err => {
-      mensaje.textContent = "Error al validar la ciudad con el servidor.";
-      mensaje.style.color = "red";
-      console.error(err);
-    });
-}
-
-// Lógica completa para validar y guardar una reserva
-function continuarCreandoReserva(ciudad, fecha, documento) {
-  const mensaje = document.getElementById("mensaje-agregado");
-
+  // Validar fecha dentro de rango permitido
   const hoy = new Date();
-  hoy.setHours(0, 0, 0, 0);
+  hoy.setHours(0,0,0,0);
 
   const fechaReserva = new Date(fecha.split("/").reverse().join("/"));
-  fechaReserva.setHours(0, 0, 0, 0);
+  fechaReserva.setHours(0,0,0,0);
 
   const unAnioDespues = new Date(hoy);
   unAnioDespues.setFullYear(hoy.getFullYear() + 1);
@@ -95,7 +81,7 @@ function continuarCreandoReserva(ciudad, fecha, documento) {
   document.getElementById("nuevoDocumento").value = "";
 }
 
-// Buscar reserva
+// Función para buscar una reserva existente
 function buscarReserva() {
   const ciudadInput = document.getElementById("ciudad").value.trim().toLowerCase();
   const fechaInput = document.getElementById("fecha").value.trim();
@@ -106,6 +92,12 @@ function buscarReserva() {
   if (!confirmado) {
     resultado.textContent = "Búsqueda cancelada por el usuario.";
     resultado.style.color = "orange";
+    return;
+  }
+
+  if (!ciudadesValidas.includes(ciudadInput)) {
+    resultado.textContent = "La ciudad ingresada no es válida o no tenemos hoteles allí.";
+    resultado.style.color = "red";
     return;
   }
 
@@ -125,4 +117,6 @@ function buscarReserva() {
     resultado.textContent = "Lamentablemente no tiene hecha una reserva en este hotel.";
     resultado.style.color = "red";
   }
+}
+
 }
