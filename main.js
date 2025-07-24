@@ -27,7 +27,7 @@ function agregarReserva() {
   const options = {
     method: 'GET',
     headers: {
-      'X-RapidAPI-Key': ''X-RapidAPI-Key': '7715d8ed9fmsh05e7c03017ec0d4p13b0c4jsn3ef4d71ba371',
+      'X-RapidAPI-Key': '7715d8ed9fmsh05e7c03017ec0d4p13b0c4jsn3ef4d71ba371',
       'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
     }
   };
